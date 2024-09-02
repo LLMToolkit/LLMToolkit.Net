@@ -11,6 +11,7 @@ namespace LLMToolkit.Samples
             
             ModelConfig config = new ModelConfig();
             config.ModelName = "llama3.1";
+
             config.Temperature =  0.0f ;
 
             //config.NumPredict = 20;
@@ -20,6 +21,7 @@ namespace LLMToolkit.Samples
             var input = Console.ReadLine();
             string response = await client.GetCompletion(config, input);
             Console.WriteLine(response);
+            Console.WriteLine("\nPress any key to exit ...");
             Console.ReadKey();
         }
     }

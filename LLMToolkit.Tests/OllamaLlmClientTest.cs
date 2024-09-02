@@ -23,7 +23,7 @@ public class OllamaLlmClientTest
 
         // Assert that the result contains either "hello" or "nice to meet you"
         Assert.True(
-            result.Contains("hello",StringComparison.InvariantCultureIgnoreCase) 
+               result.Contains("hello",StringComparison.InvariantCultureIgnoreCase) 
             || result.Contains("nice to meet you",StringComparison.InvariantCultureIgnoreCase)
         );
 
