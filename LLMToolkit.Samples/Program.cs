@@ -1,4 +1,5 @@
-﻿using LLMToolkit;
+﻿using System.Dynamic;
+using LLMToolkit;
 
 
 namespace LLMToolkit.Samples
@@ -7,11 +8,44 @@ namespace LLMToolkit.Samples
     {
         static async Task Main(string[] args)
         {
-            //await Test1();
-            await Test2();
+            //await GetCompletionSample();
+            //await ChatSample();
+            await GetEmbeddingsSample();
         }
 
-        private static async Task Test1()
+        private static async ValueTask GetEmbeddingsSample()
+        {
+            // create client
+            string uri = "http://localhost:11434";
+            LlmClient client = LlmClientFactory.CreateLlmClient(LlmProvider.Ollama, uri, "apiKey");
+            client.Config.ModelName = "nomic-embed-text";
+            client.Config.Temperature = 0.0f;
+
+
+            var dialog = new ChatMessageThread();
+
+            Console.WriteLine(" - - Ollama Embeddings - - ");
+            while (true)
+            {
+                Console.Write("\n\nUser >>>");
+                string? input = Console.ReadLine();
+                
+                List<double[]> embeds = await client.GetEmbedding(input);
+                
+                // imprime los embeddings por consola
+                Console.WriteLine("Embeddings: ");
+                foreach (var emb in embeds)
+                {
+                    Console.WriteLine(string.Join(";", emb));
+                }
+
+                // pring the embeddings vector length
+                Console.WriteLine("\n\nEmbeddings length: " + embeds[0].Length);
+            }
+
+        }
+
+        private static async Task GetCompletionSample()
         {
             // create client
             string uri = "http://localhost:11434";
@@ -36,7 +70,7 @@ namespace LLMToolkit.Samples
 
 
 
-        private static async Task Test2()
+        private static async Task ChatSample()
         {
             // create client
             string uri = "http://localhost:11434";
