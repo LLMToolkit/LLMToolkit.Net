@@ -1,23 +1,29 @@
 ﻿namespace LLMToolkit;
 
-public class OpenAiLlmClient : ILlmClient
+public class OpenAiLlmClient : LlmClient, ILlmClient
 {
-    public Task<List<double[]>> GetEmbedding(ModelConfig config, string input, CancellationToken cancellationToken = default)
+
+    public OpenAiLlmClient(string uri, string apikey)
+    {
+        
+    }
+
+    public override Task<List<double[]>> GetEmbedding(string input, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public Task<string> GetCompletion(ModelConfig config, string input, CancellationToken cancellationToken = default)
+    public override Task<string> GetCompletion(string input, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public Task<string> GetCompletion(ModelConfig config, string input, IResponseStreamer<ChatResponseStream?> streamer, CancellationToken cancellationToken = default)
+    public override Task<string> GetCompletion(string input, IResponseStreamer<ChatResponseStream?> streamer, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public Task<string> GetCompletion(ModelConfig config, MessageThread dialog, CancellationToken cancellationToken = default)
+    public override Task<string> GetCompletion(ChatMessageThread dialog, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

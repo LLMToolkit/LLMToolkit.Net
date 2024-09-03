@@ -14,21 +14,21 @@ namespace LLMToolkit.Samples
         private static async Task Test1()
         {
             // create client
-            var client = LlmClientFactory.CreateLlmClient(LlmProvider.Ollama);
-            
-            // create model configuration
-            ModelConfig config = new ModelConfig();
-            config.ModelName = "llama3.1";
-            config.Temperature =  0.0f ;
-            //config.NumPredict = 20;
+            string uri = "http://localhost:11434";
+            LlmClient client = LlmClientFactory.CreateLlmClient(LlmProvider.Ollama, uri, "apiKey");
+            client.Config.ModelName = "llama3.1";
+            client.Config.Temperature = 0.0f;
 
-            Console .WriteLine("Getting completion from Ollama\n");
+
+            Console.WriteLine("Getting completion from Ollama\n");
             Console.Write("Ask to Ollama >");
             var input = Console.ReadLine();
             
+
             // get completion from Large Language Model
-            string response = await client.GetCompletion(config, input);
+            string response = await client.GetCompletion(input);
             
+
             Console.WriteLine(response);
             Console.WriteLine("\nPress any key to exit ...");
             Console.ReadKey();
@@ -39,29 +39,26 @@ namespace LLMToolkit.Samples
         private static async Task Test2()
         {
             // create client
-            var client = LlmClientFactory.CreateLlmClient(LlmProvider.Ollama);
+            string uri = "http://localhost:11434";
+            LlmClient client = LlmClientFactory.CreateLlmClient(LlmProvider.Ollama, uri, "apiKey");
+            client.Config.ModelName = "llama3.1";
+            client.Config.Temperature = 0.0f;
+            
 
-            // create model configuration
-            ModelConfig config = new ModelConfig();
-            config.ModelName = "llama3.1";
-            config.Temperature = 0.0f;
-            //config.NumPredict = 20;
-
-            var dialog = new MessageThread();
-
+            var dialog = new ChatMessageThread();
 
             Console.WriteLine(" - - Ask to Ollama - - ");
             while (true)
             {
-                Console.Write("User >>>");
+                Console.Write("\nUser >>>");
                 var input = Console.ReadLine();
-                dialog.AddUserMessage(input);
+                dialog.AddHumanMessage(input);
 
-                string resp = await client.GetCompletion(config, dialog);
+                string resp = await client.GetCompletion(dialog);
                 dialog.AddAssistantMessage(resp);
                 
                 // imprime la respuesta
-                Console.WriteLine("Ollama >>> " + resp);
+                Console.WriteLine("\nOllama >>> " + resp);
             }
 
         }

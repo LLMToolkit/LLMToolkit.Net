@@ -7,36 +7,35 @@ using OllamaSharp.Models.Chat;
 namespace LLMToolkit;
 
 
-public class OllamaLlmClient : ILlmClient
+public class OllamaLlmClient : LlmClient
 {
     OllamaApiClient _ollama ;
 
-    public OllamaLlmClient()
+    public OllamaLlmClient(string uri, string apikey)
     {
-        // set up the client
-        var uri = new Uri("http://localhost:11434");
         _ollama = new OllamaApiClient(uri);
-        
     }
 
-    public async Task<List<double[]>> GetEmbedding(ModelConfig config, string input, CancellationToken cancellationToken = default)
+
+
+    public override async Task<List<double[]>> GetEmbedding(string input, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<string> GetCompletion(ModelConfig config,  string input, CancellationToken cancellationToken = default)
+    public override async Task<string> GetCompletion(string input, CancellationToken cancellationToken = default)
     {
         // Create request options for Ollama
         RequestOptions reqOptions = new RequestOptions();
-        reqOptions.Temperature = config.Temperature;
-        reqOptions.TopP = config.TopP;
-        reqOptions.NumPredict = config.NumPredict;
+        reqOptions.Temperature = Config.Temperature;
+        reqOptions.TopP = Config.TopP;
+        reqOptions.NumPredict = Config.NumPredict;
         // TODO : Add more options here
 
         // create request for Ollama
         GenerateRequest request = new GenerateRequest();
         request.Prompt = input;
-        request.Model = config.ModelName;
+        request.Model = Config.ModelName;
         request.Options = reqOptions;
         
         // get completion from Ollama Large Language Model
@@ -47,25 +46,25 @@ public class OllamaLlmClient : ILlmClient
         return response.ToString();
     }
 
-    public async Task<string> GetCompletion(ModelConfig config, string input, IResponseStreamer<ChatResponseStream?> streamer, CancellationToken cancellationToken = default)
+    public override async Task<string> GetCompletion(string input, IResponseStreamer<ChatResponseStream?> streamer, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
 
 
-    public async Task<string> GetCompletion(ModelConfig config, MessageThread dialog, CancellationToken cancellationToken = default)
+    public override async Task<string> GetCompletion( ChatMessageThread dialog, CancellationToken cancellationToken = default)
     {
         // Create request options for Ollama
         RequestOptions reqOptions = new RequestOptions();
-        reqOptions.Temperature = config.Temperature;
-        reqOptions.TopP = config.TopP;
-        reqOptions.NumPredict = config.NumPredict;
+        reqOptions.Temperature = Config.Temperature;
+        reqOptions.TopP = Config.TopP;
+        reqOptions.NumPredict = Config.NumPredict;
         // TODO : Add more options here
 
         // create request for Ollama
         ChatRequest request = new ChatRequest();
-        request.Model = config.ModelName;
+        request.Model = Config.ModelName;
         request.Options = reqOptions;
 
         request.Messages = ConvertDialog(dialog);
@@ -80,7 +79,7 @@ public class OllamaLlmClient : ILlmClient
 
 
     //ConvertMessage IEnumerable<ChatMessage> a IEnumerable<OllamaSharp.Models.Chat.Message>
-    private IEnumerable<OllamaSharp.Models.Chat.Message> ConvertDialog(MessageThread dialog)
+    private IEnumerable<OllamaSharp.Models.Chat.Message> ConvertDialog(ChatMessageThread dialog)
     {
         List<OllamaSharp.Models.Chat.Message> result = new List<OllamaSharp.Models.Chat.Message>();
         foreach (var message in dialog.Messages)
@@ -96,7 +95,7 @@ public class OllamaLlmClient : ILlmClient
         ;
         switch (message.Role)
         {
-            case ChatRole.User:
+            case ChatRole.Human:
                 return new OllamaSharp.Models.Chat.Message(OllamaSharp.Models.Chat.ChatRole.User, message.Content);
             case ChatRole.Assistant:
                 return new OllamaSharp.Models.Chat.Message(OllamaSharp.Models.Chat.ChatRole.Assistant, message.Content);
