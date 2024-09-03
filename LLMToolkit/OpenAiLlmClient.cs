@@ -16,4 +16,9 @@ public class OpenAiLlmClient : ILlmClient
     {
         throw new NotImplementedException();
     }
+
+    public Task<string> GetCompletion(ModelConfig config, MessageThread dialog, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }

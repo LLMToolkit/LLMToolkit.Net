@@ -14,4 +14,7 @@ public interface ILlmClient
       public Task<string> GetCompletion(ModelConfig config, string input, IResponseStreamer<ChatResponseStream?> streamer, CancellationToken cancellationToken = default);
 
 
+      public Task<string> GetCompletion(ModelConfig config, MessageThread dialog, CancellationToken cancellationToken = default);
+
+
 }
