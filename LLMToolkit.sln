@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LLMToolkit", "LLMToolkit\LL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LLMToolkit.Tests", "LLMToolkit.Tests\LLMToolkit.Tests.csproj", "{CC99A1FA-5887-4CB9-A168-35D3014821B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLMToolkit.Samples", "LLMToolkit.Samples\LLMToolkit.Samples.csproj", "{FFCCD2B3-259A-4028-BFC5-2EA1D4F6C7B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LLMToolkit.Samples", "LLMToolkit.Samples\LLMToolkit.Samples.csproj", "{FFCCD2B3-259A-4028-BFC5-2EA1D4F6C7B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

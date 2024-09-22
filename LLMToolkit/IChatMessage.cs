@@ -2,6 +2,6 @@
 
 public interface IChatMessage
 {
-    ChatRole Role { get; }
+    ChatMessageRole MessageRole { get; }
     string Content { get; }
 }

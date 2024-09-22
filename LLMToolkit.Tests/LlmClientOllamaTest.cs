@@ -2,21 +2,24 @@
 
 namespace LLMToolkit.Tests;
 
-public class OllamaLlmClientTest
+public class LlmClientOllamaTest
 {
-
+    
     [Fact]
     public async Task GetCompletion_ReturnsExpectedResult()
     {
+        string uri = "http://localhost:11434";
+        LlmClient client = LlmClientFactory.CreateLlmClient(LlmProvider.Ollama, uri, "apiKey");
+        client.Config.ModelName = "llama3.1";
+        client.Config.Temperature = 0.0f;
+
         // Arrange
-        var config = new ModelConfig();
-        config.ModelName = "llama3.1";
         var input = "Hello ollama";
         var cancellationToken = default(CancellationToken);
-        var client = new OllamaLlmClient();
+       
 
         // Act
-        var result = await client.GetCompletion(config, input, cancellationToken);
+        var result = await client.GetCompletion( input, cancellationToken);
 
         // non empty
         Assert.NotEmpty(result);
@@ -26,14 +29,7 @@ public class OllamaLlmClientTest
                result.Contains("hello",StringComparison.InvariantCultureIgnoreCase) 
             || result.Contains("nice to meet you",StringComparison.InvariantCultureIgnoreCase)
         );
-
-        
-
-        
-
-
-
-
-        
     }
+      
+    
 }

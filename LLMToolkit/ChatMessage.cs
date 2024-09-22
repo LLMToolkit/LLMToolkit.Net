@@ -3,11 +3,11 @@
 public class ChatMessage : IChatMessage
 {
     public string Content { get; }
-    public ChatRole Role { get; }
-    public ChatMessage( ChatRole role, string content)
+    public ChatMessageRole MessageRole { get; }
+    public ChatMessage( ChatMessageRole messageRole, string content)
     {
         Content = content;
-        Role = role;
+        MessageRole = messageRole;
     }
 }
 

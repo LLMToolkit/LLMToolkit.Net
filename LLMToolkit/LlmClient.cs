@@ -10,11 +10,20 @@ public abstract class LlmClient : ILlmClient
         Config = new ModelConfig();
     }
 
-    public abstract Task<List<double[]>> GetEmbedding( string input, CancellationToken cancellationToken = default);
+    public abstract Task<List<double[]>> GetEmbedding( List<string> input, CancellationToken cancellationToken = default);
+
+    public Task<double[]> GetEmbedding(string input, CancellationToken cancellationToken = default)
+    {
+        //List<string> param = new List<string>(){input};
+        var embeddingsTask = GetEmbedding([input], cancellationToken);
+        return embeddingsTask.ContinueWith(task => task.Result[0], cancellationToken);
+    }
+
+
+
     public abstract Task<string> GetCompletion(string input, CancellationToken cancellationToken = default);
 
-    public abstract Task<string> GetCompletion(string input, IResponseStreamer<ChatResponseStream?> streamer,
-        CancellationToken cancellationToken = default);
+    //public abstract Task<string> GetCompletion(string input, IResponseStreamer<ChatResponseStream?> streamer,CancellationToken cancellationToken = default);
 
-    public abstract Task<string> GetCompletion(ChatMessageThread dialog, CancellationToken cancellationToken = default);
+    public abstract Task<string> GetCompletion(ChatMessageThread dialog, string toolDefinition, CancellationToken cancellationToken = default);
 }

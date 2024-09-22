@@ -1,10 +1,10 @@
 ﻿namespace LLMToolkit;
 
- // enum ChatRole
-public enum ChatRole
+ // enum ChatMessageRole
+public enum ChatMessageRole
 {
     System,
-    Human,
+    User,
     Assistant,
     Tool
 }

@@ -6,8 +6,8 @@ public class LlmClientFactory
     {
         return provider switch
         {
-            LlmProvider.OpenAI => new OpenAiLlmClient(uri, apikey),
-            LlmProvider.Ollama => new OllamaLlmClient(uri, apikey),
+            LlmProvider.OpenAI => new LlmClientOpenAi(uri, apikey),
+            LlmProvider.Ollama => new LlmClientOllama(uri, apikey),
             _ => throw new NotImplementedException()
         };
     }

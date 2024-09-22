@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OllamaSharp" Version="3.0.0" />
+    <Compile Remove="ActionResponseStreamer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="OllamaSharp" Version="3.0.7" />
   </ItemGroup>
 
 </Project>
