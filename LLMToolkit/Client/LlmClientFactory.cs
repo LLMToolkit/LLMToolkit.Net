@@ -1,4 +1,6 @@
-﻿namespace LLMToolkit;
+﻿using LLMToolkit.Client;
+
+namespace LLMToolkit.Client;
 
 public class LlmClientFactory
 {

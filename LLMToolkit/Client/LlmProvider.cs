@@ -1,4 +1,4 @@
-﻿namespace LLMToolkit;
+﻿namespace LLMToolkit.Client;
 
 public enum LlmProvider
 {

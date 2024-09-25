@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
-using LLMToolkit;
+using LLMToolkit.Tools;
 
 namespace LLMToolkit.Tests;
 
@@ -10,7 +10,7 @@ namespace LLMToolkit.Tests;
 
 public class TestClass
 {
-    [LlmTools(Name = "TestGetValue", Description = "Convierte el numero a string")]
+    [LlmTool(Name = "TestGetValue", Description = "Convierte el numero a string")]
     public static string TestGetValue(
         [Description("Identifier to convert"), Required]
         int id

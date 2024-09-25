@@ -1,4 +1,4 @@
-﻿namespace LLMToolkit;
+﻿namespace LLMToolkit.Chat;
 
 public interface IChatMessage
 {

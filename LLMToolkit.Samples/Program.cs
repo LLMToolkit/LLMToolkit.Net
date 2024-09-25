@@ -12,14 +12,15 @@ namespace LLMToolkit.Samples
         static async Task Main(string[] args)
         {
 
-            await SamplesEmbeddings.GetEmbeddingsSimpleOllama();
-            await SamplesEmbeddings.GetEmbeddingsListOllama();
+            //await SamplesEmbeddings.GetEmbeddingsSimpleOllama();
+            //await SamplesEmbeddings.GetEmbeddingsListOllama();
 
-            await SamplesCompletion.GetCompletionOllama();
+            //await SamplesCompletion.GetCompletionOllama();
 
-            await SamplesChat.ChatSimpleOllama();
+            //await SamplesChat.ChatSimpleOllama();
 
 
+            await SamplesTools.TestChatCalling();
 
         }
 

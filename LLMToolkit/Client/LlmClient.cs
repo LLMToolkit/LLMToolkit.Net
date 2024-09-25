@@ -1,4 +1,6 @@
-﻿namespace LLMToolkit;
+﻿using LLMToolkit.Chat;
+
+namespace LLMToolkit.Client;
 
 public abstract class LlmClient : ILlmClient
 {
@@ -10,7 +12,7 @@ public abstract class LlmClient : ILlmClient
         Config = new ModelConfig();
     }
 
-    public abstract Task<List<double[]>> GetEmbedding( List<string> input, CancellationToken cancellationToken = default);
+    public abstract Task<List<double[]>> GetEmbedding(List<string> input, CancellationToken cancellationToken = default);
 
     public Task<double[]> GetEmbedding(string input, CancellationToken cancellationToken = default)
     {
@@ -23,7 +25,7 @@ public abstract class LlmClient : ILlmClient
 
     public abstract Task<string> GetCompletion(string input, CancellationToken cancellationToken = default);
 
-    //public abstract Task<string> GetCompletion(string input, IResponseStreamer<ChatResponseStream?> streamer,CancellationToken cancellationToken = default);
+    //public abstract Task<string> Chat(string input, IResponseStreamer<ChatResponseStream?> streamer,CancellationToken cancellationToken = default);
 
-    public abstract Task<string> GetCompletion(ChatMessageThread dialog, string toolDefinition, CancellationToken cancellationToken = default);
+    public abstract Task<string> Chat(ChatMessageThread dialog, string toolDefinition = "", CancellationToken cancellationToken = default);
 }

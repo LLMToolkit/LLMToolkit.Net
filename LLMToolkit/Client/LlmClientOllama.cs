@@ -1,25 +1,26 @@
 ﻿using System.IO;
 using System.Text;
+using LLMToolkit.Chat;
 using Newtonsoft.Json;
 using OllamaSharp;
 using OllamaSharp.Models;
 using OllamaSharp.Models.Chat;
 
-namespace LLMToolkit;
+namespace LLMToolkit.Client;
 
 public class LlmClientOllama : LlmClient
 {
-    OllamaApiClient _ollama ;
+    OllamaApiClient _ollama;
 
     public LlmClientOllama(string uri, string apikey)
     {
         _ollama = new OllamaApiClient(uri);
     }
 
-    public override async Task<List<double[]>> GetEmbedding(List<String> input, CancellationToken cancellationToken = default)
+    public override async Task<List<double[]>> GetEmbedding(List<string> input, CancellationToken cancellationToken = default)
     {
         var embedReq = CreateEmbedRequest(input);
-        var embResp = await _ollama.Embed(embedReq);        
+        var embResp = await _ollama.Embed(embedReq);
         return embResp.Embeddings;
     }
 
@@ -29,13 +30,13 @@ public class LlmClientOllama : LlmClient
 
         var request = CreateCompletionRequest(input);
         await foreach (var stream in _ollama.Generate(request))
-            response.Append(stream.Response); 
+            response.Append(stream.Response);
 
         return response.ToString();
     }
 
 
-    public override async Task<string> GetCompletion( ChatMessageThread dialog, string toolDefinition, CancellationToken cancellationToken = default)
+    public override async Task<string> Chat(ChatMessageThread dialog, string toolDefinition = "", CancellationToken cancellationToken = default)
     {
         var request = CreateChatRequest(dialog, toolDefinition);
         StringBuilder response = new StringBuilder();
@@ -82,7 +83,7 @@ public class LlmClientOllama : LlmClient
 
         if (toolDefinition != "")
         {
-            request.Tools = (List<Tool>)JsonConvert.DeserializeObject<List<Tool>>(toolDefinition);
+            request.Tools = JsonConvert.DeserializeObject<List<Tool>>(toolDefinition);
         }
         return request;
     }
@@ -103,9 +104,9 @@ public class LlmClientOllama : LlmClient
 
 
 
-    private IEnumerable<OllamaSharp.Models.Chat.Message> ConvertDialogToOllamaMessages(ChatMessageThread dialog)
+    private IEnumerable<Message> ConvertDialogToOllamaMessages(ChatMessageThread dialog)
     {
-        List<OllamaSharp.Models.Chat.Message> result = new List<OllamaSharp.Models.Chat.Message>();
+        List<Message> result = new List<Message>();
         foreach (var message in dialog.Messages)
         {
             result.Add(ConvertMessage(message));
@@ -115,20 +116,20 @@ public class LlmClientOllama : LlmClient
 
 
 
-    private OllamaSharp.Models.Chat.Message ConvertMessage(IChatMessage message)
+    private Message ConvertMessage(IChatMessage message)
     {
         switch (message.MessageRole)
         {
             case ChatMessageRole.System:
-                return new OllamaSharp.Models.Chat.Message(OllamaSharp.Models.Chat.ChatRole.System, message.Content);
+                return new Message(ChatRole.System, message.Content);
             case ChatMessageRole.User:
-                return new OllamaSharp.Models.Chat.Message(OllamaSharp.Models.Chat.ChatRole.User, message.Content);
+                return new Message(ChatRole.User, message.Content);
             case ChatMessageRole.Assistant:
-                return new OllamaSharp.Models.Chat.Message(OllamaSharp.Models.Chat.ChatRole.Assistant, message.Content);
+                return new Message(ChatRole.Assistant, message.Content);
             case ChatMessageRole.Tool:
-                return new OllamaSharp.Models.Chat.Message(OllamaSharp.Models.Chat.ChatRole.Tool, message.Content);
+                return new Message(ChatRole.Tool, message.Content);
             default:
-                return new OllamaSharp.Models.Chat.Message(OllamaSharp.Models.Chat.ChatRole.User, message.Content);
+                return new Message(ChatRole.User, message.Content);
         }
     }
 

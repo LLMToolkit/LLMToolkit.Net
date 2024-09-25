@@ -1,4 +1,6 @@
-﻿namespace LLMToolkit.Samples;
+﻿using LLMToolkit.Client;
+
+namespace LLMToolkit.Samples;
 
 public static class SamplesEmbeddings
 {

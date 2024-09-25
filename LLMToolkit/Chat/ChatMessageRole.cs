@@ -1,6 +1,6 @@
-﻿namespace LLMToolkit;
+﻿namespace LLMToolkit.Chat;
 
- // enum ChatMessageRole
+// enum ChatMessageRole
 public enum ChatMessageRole
 {
     System,

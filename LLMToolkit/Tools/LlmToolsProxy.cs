@@ -4,23 +4,24 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace LLMToolkit;
+namespace LLMToolkit.Tools;
 
-public  class LlmToolsProxy
+public class LlmToolsProxy
 {
-    private Dictionary<string, LlmToolsFunction> FuncTools;
+    // Dictionary to store the functions tools definitions
+    private Dictionary<string, LlmToolFunction> FuncTools;
 
-    public  LlmToolsProxy()
+    public LlmToolsProxy()
     {
-        FuncTools = new Dictionary<string, LlmToolsFunction>();
+        FuncTools = new Dictionary<string, LlmToolFunction>();
     }
 
-    
+
     public void ScanFuncTools(Assembly? assembly)
     {
         foreach (Type typetype in assembly.GetTypes())
         {
-            GenerateClassDef(typetype);
+            RegisterTools(typetype);
         }
     }
 
@@ -28,15 +29,15 @@ public  class LlmToolsProxy
     public string GetFuncToolDefinitions()
     {
         List<string> toolDefinitions = new List<string>();
-        
-        // si GenerateClassDef contiene objetos de tipo LlmToolsFunction
-        if (this.FuncTools.Count > 0)
+
+        // si RegisterTools contiene objetos de tipo LlmToolFunction
+        if (FuncTools.Count > 0)
         {
-            foreach (var tool in this.FuncTools)
+            foreach (var tool in FuncTools)
             {
                 string funcDef = @"{
    ""type"": ""function"",
-   ""function"": "+ tool.Value.Definition + @"
+   ""function"": " + tool.Value.Definition + @"
 }";
                 toolDefinitions.Add(funcDef);
             }
@@ -49,12 +50,12 @@ public  class LlmToolsProxy
 
     public string Invoke(string funcTool, string parameters)
     {
-        if (this.FuncTools.ContainsKey(funcTool))
+        if (FuncTools.ContainsKey(funcTool))
         {
-            LlmToolsFunction funcToolDef = this.FuncTools[funcTool];
+            LlmToolFunction funcToolDef = FuncTools[funcTool];
 
             // Obtener el tipo de la clase Ejemplo
-            Type tipo = funcToolDef.AiTooType; //typeof(Ejemplo);
+            Type tipo = funcToolDef.LlmToolType; //typeof(Ejemplo);
             MethodInfo methodInfo = tipo.GetMethod(funcToolDef.MethodName, BindingFlags.Static | BindingFlags.Public);
 
             // Obtener los parámetros del método
@@ -103,28 +104,29 @@ public  class LlmToolsProxy
 
 
 
-    private void GenerateClassDef(Type classType)
+    private void RegisterTools(Type classType)
     {
         MethodInfo[] methods = classType.GetMethods();
 
         foreach (MethodInfo methodInfo in methods)
         {
-            //verifico que sea un metodo estatico y publico
+            // Only static public methods
             if (methodInfo.IsStatic && methodInfo.IsPublic)
             {
-                // si tiene el atributo que indica que es una funcion de la AI
-                var aiToolAttribute = methodInfo.GetCustomAttribute<LlmToolsAttribute>();
-                if (aiToolAttribute != null)
+                // If the method is llm tool function add it to the dictionary
+                var llmToolAtribute = methodInfo.GetCustomAttribute<LlmToolAttribute>();
+                if (llmToolAtribute != null)
                 {
-                    string funtToolDef = JsonConvert.SerializeObject(
-                        GetJsonFuncTool(methodInfo, aiToolAttribute),
+                    string functionToolDef = JsonConvert.SerializeObject(
+                        GetJsonFuncTool(methodInfo, llmToolAtribute),
                         Formatting.Indented);
-                    this.FuncTools.Add(aiToolAttribute.Name, new LlmToolsFunction()
+
+                    FuncTools.Add(llmToolAtribute.Name, new LlmToolFunction()
                     {
-                        AiTooType = classType,
+                        LlmToolType = classType,
                         MethodName = methodInfo.Name,
-                        Description = aiToolAttribute.Description,
-                        Definition = funtToolDef
+                        Description = llmToolAtribute.Description,
+                        Definition = functionToolDef
                     });
                 }
             }
@@ -133,17 +135,17 @@ public  class LlmToolsProxy
 
 
 
-    private object GetJsonFuncTool(MethodInfo metodo, LlmToolsAttribute aiToolAtribute)
+    private object GetJsonFuncTool(MethodInfo methodInf, LlmToolAttribute llmToolAtribute)
     {
         var parametersDic = new Dictionary<string, object>();
         List<string> requiredParameters = new List<string>();
 
-        foreach (ParameterInfo paramDef in metodo.GetParameters())
+        foreach (ParameterInfo paramDef in methodInf.GetParameters())
         {
             var param = new
             {
                 Type = paramDef.ParameterType.Name,
-                Description = paramDef.GetCustomAttribute<DescriptionAttribute>().Description,
+                paramDef.GetCustomAttribute<DescriptionAttribute>().Description,
             };
             parametersDic.Add(paramDef.Name, param);
             if (paramDef.GetCustomAttribute<RequiredAttribute>() != null)
@@ -154,8 +156,8 @@ public  class LlmToolsProxy
 
         var definicionFuncion = new
         {
-            Name = aiToolAtribute.Name,
-            description = aiToolAtribute.Description,
+            llmToolAtribute.Name,
+            description = llmToolAtribute.Description,
             parameters = new
             {
                 type = "object",

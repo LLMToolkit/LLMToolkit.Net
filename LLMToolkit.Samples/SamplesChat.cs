@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LLMToolkit.Chat;
+using LLMToolkit.Client;
 
 namespace LLMToolkit.Samples;
 
@@ -24,7 +26,7 @@ public static class SamplesChat
             Console.Write("\nUser >>>");
             var input = Console.ReadLine();
             dialog.AddUserMessage(input);
-            string resp = await client.GetCompletion(dialog, "");
+            string resp = await client.Chat(dialog, "");
             dialog.AddAssistantMessage(resp);
             Console.WriteLine("\nOllama >>> " + resp);
         }

@@ -1,4 +1,4 @@
-﻿using LLMToolkit;
+﻿using LLMToolkit.Client;
 
 namespace LLMToolkit.Tests;
 
