@@ -20,8 +20,8 @@ namespace LLMToolkit.Samples
             //await SamplesChat.ChatSimpleOllama();
 
 
-            await SamplesTools.TestChatCalling();
-
+            // await SamplesTools.TestChatCalling();
+            await SamplesChunking.TestChunk1();
         }
 
 

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="ActionResponseStreamer.cs" />
+    <Compile Remove="Chunking\RecursiveCharacterTextSplitter.cs" />
   </ItemGroup>
 
   <ItemGroup>
